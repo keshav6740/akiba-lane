@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akiba Lane | Premium Anime Figures & Collectibles</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-black text-white">
+
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="split-top">
+            <div class="watermark">AKIBA</div>
+        </div>
+        <div class="split-bottom">
+            <div class="watermark">LANE</div>
+        </div>
+        <div class="loader-content">
+            <div class="loading-text glitch-text" data-text="LOADING">
+                <i data-lucide="zap" class="icon-pulse"></i> LOADING
+            </div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+        <div class="slash-line"></div>
+        <div class="white-flash"></div>
+    </div>
+
+    <!-- BACKGROUND EFFECTS -->
+    <div id="sakura-container"></div>
+    <div id="atmosphere-container"></div>
+    <div class="noise-overlay"></div>
+    <div class="cyber-hud">
+        <div class="hud-tl">
+            <div class="hud-status"><div class="dot"></div> SYS.ONLINE</div>
+            <div class="hud-line-h"></div>
+            <div class="hud-line-v"></div>
+        </div>
+        <div class="hud-br">
+            <div class="hud-status">SECURE_CONNECTION <div class="dot"></div></div>
+            <div class="hud-line-h"></div>
+            <div class="hud-line-v"></div>
+        </div>
+    </div>
+    
+    <!-- CUSTOM CURSOR -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-outline"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar fixed-top">
+        <div class="container-fluid px-4 py-3 bg-black-blur border-bottom-glass">
+            <div class="d-flex align-items-center gap-2 cursor-pointer brand-logo" onclick="window.scrollTo(0,0)">
+                <i data-lucide="zap" class="text-pink icon-lg"></i>
+                <span class="brand-text">AKIBA<span class="text-pink">LANE</span></span>
+            </div>
+
+            <div class="d-none d-md-flex gap-4 nav-links">
+                <button onclick="filterCategory('individual')" class="nav-btn">Figures</button>
+                <button onclick="filterCategory('myst_box')" class="nav-btn">Mystery Box</button>
+                <button onclick="filterCategory('hp')" class="nav-btn">Accessories</button>
+                <button onclick="filterCategory('set')" class="nav-btn">Sets</button>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 icon-group">
+                <i data-lucide="search" class="nav-icon" onclick="toggleSearch()"></i>
+                <div class="cart-icon-wrapper" onclick="toggleCart()">
+                    <i data-lucide="shopping-cart" class="nav-icon"></i>
+                    <span id="cart-count" class="cart-badge d-none">0</span>
+                </div>
+                <i data-lucide="ghost" class="nav-icon" onclick="toggleContact()"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SEARCH OVERLAY -->
+    <div id="search-overlay" class="overlay">
+        <button class="close-btn" onclick="toggleSearch()"><i data-lucide="x"></i></button>
+        <div class="container pt-5">
+            <input type="text" id="search-input" placeholder="SEARCH DATABASE..." onkeyup="handleSearch(this.value)">
+            <div id="search-results" class="row mt-5 g-4"></div>
+        </div>
+    </div>
+
+    <!-- CONTACT MODAL -->
+    <div id="contact-modal" class="overlay flex-center">
+        <div class="modal-card">
+            <button class="close-btn-abs" onclick="toggleContact()"><i data-lucide="x"></i></button>
+            <div class="text-center mb-4">
+                <i data-lucide="ghost" class="text-purple icon-xl bounce"></i>
+                <h3 class="font-bangers mt-3">ADMIN CONTACT</h3>
+                <p class="text-muted font-mono">Direct line to Akiba HQ</p>
+            </div>
+            <div class="d-grid gap-3">
+                <a href="mailto:admin@akibalane.com" class="btn btn-outline-custom">EMAIL SUPPORT</a>
+                <a href="https://wa.me/919876543210" target="_blank" class="btn btn-outline-custom">WHATSAPP</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART DRAWER -->
+    <div id="cart-backdrop" onclick="toggleCart()"></div>
+    <div id="cart-drawer">
+        <div class="p-4 h-100 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom-glass pb-3">
+                <h2 class="font-bangers m-0">YOUR <span class="text-pink">LOOT</span></h2>
+                <button class="btn-icon" onclick="toggleCart()"><i data-lucide="x"></i></button>
+            </div>
+            
+            <div id="cart-items" class="flex-grow-1 overflow-auto">
+                <!-- Items injected here -->
+            </div>
+
+            <div id="cart-footer" class="mt-3 pt-3 border-top-glass">
+                <div class="d-flex justify-content-between font-mono font-bold mb-3 text-xl">
+                    <span>TOTAL</span>
+                    <span class="text-cyan">Rs. <span id="cart-total">0</span></span>
+                </div>
+                <button id="checkout-btn" onclick="startCheckout()" class="btn btn-pink w-100 py-3 font-bold skew-btn">PROCEED TO CHECKOUT</button>
+            </div>
+
+            <!-- CHECKOUT FORM (Hidden initially) -->
+            <div id="checkout-form" class="d-none h-100 flex-column">
+                <button onclick="cancelCheckout()" class="btn-text mb-3">← Back to Cart</button>
+                <h3 class="font-bangers text-cyan mb-4">TRANSMISSION DETAILS</h3>
+                <form onsubmit="submitOrder(event)">
+                    <div class="mb-3">
+                        <label class="text-muted font-mono small">CODENAME (Name)</label>
+                        <input type="text" id="cust-name" class="form-control bg-dark text-white border-secondary" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted font-mono small">LOCATION (City)</label>
+                        <input type="text" id="cust-city" class="form-control bg-dark text-white border-secondary" required>
+                    </div>
+                    <div class="row g-2 mb-4">
+                        <div class="col-6">
+                            <button type="button" class="btn btn-outline-secondary w-100 h-100 py-3" onclick="setMethod('whatsapp')">
+                                <i data-lucide="message-circle" class="text-success mb-1"></i><br>WhatsApp
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button type="button" class="btn btn-outline-secondary w-100 h-100 py-3" onclick="setMethod('email')">
+                                <i data-lucide="mail" class="text-primary mb-1"></i><br>Email
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 py-3 font-black">SEND ORDER REQUEST</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- HERO SECTION -->
+        <section id="hero" class="vh-100 d-flex align-items-center justify-content-center position-relative overflow-hidden">
+            <div class="hero-bg-layers">
+                <div class="gradient-overlay"></div>
+                <div class="manga-lines"></div>
+                <div class="grid-floor"></div>
+                <!-- Magic Circle SVG -->
+                <div class="magic-circle-container">
+                    <svg viewBox="0 0 100 100" class="magic-circle">
+                        <circle cx="50" cy="50" r="48" stroke="white" stroke-width="0.5" fill="none" stroke-dasharray="4 2" />
+                        <circle cx="50" cy="50" r="40" stroke="white" stroke-width="0.2" fill="none" />
+                        <path d="M50 10 L90 80 L10 80 Z" stroke="white" stroke-width="0.2" fill="none" />
+                        <path d="M50 90 L90 20 L10 20 Z" stroke="white" stroke-width="0.2" fill="none" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="container position-relative z-10">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 hero-text text-start">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="line-marker bg-cyan"></div>
+                            <span class="font-mono text-cyan small tracking-widest">EST. 2026 // TOKYO</span>
+                        </div>
+                        <h1 class="font-bangers hero-title mb-4">
+                            <span class="d-block glitch-text" data-text="LEVEL UP">LEVEL UP</span>
+                            <span class="d-block gradient-text glitch-text" data-text="YOUR WORLD">YOUR WORLD</span>
+                        </h1>
+                        <p class="font-mono text-gray-400 border-start border-pink ps-4 py-2 mb-5 max-w-md">
+                            SYSTEM INITIALIZED. ACCESSING DATABASE OF PREMIUM FIGURES, MYSTERY CRATES, AND RARE ARTIFACTS.
+                        </p>
+                        <div class="d-flex flex-wrap gap-4">
+                            <button onclick="scrollToId('product-grid')" class="btn btn-pink px-5 py-3 font-bold skew-btn hover-glow">
+                                <span class="d-flex align-items-center gap-2"><i data-lucide="zap"></i> START SHOPPING</span>
+                            </button>
+                            <button onclick="scrollToId('categories')" class="btn btn-outline-cyan px-5 py-3 font-bold skew-btn">
+                                VIEW COLLECTION
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 d-none d-lg-block">
+                        <div id="hero-card" class="card-3d">
+                            <div class="scan-line"></div>
+                            <div class="corner-accents">
+                                <div class="ca ca-tl"></div><div class="ca ca-tr"></div>
+                                <div class="ca ca-bl"></div><div class="ca ca-br"></div>
+                            </div>
+                            <div class="card-content text-center">
+                                <div class="holo-orb"></div>
+                                <h3 class="font-bangers text-6xl mt-neg-50">MYSTERY BOX</h3>
+                                <p class="font-mono text-purple tracking-widest">SR // SSR // UR</p>
+                                <div class="rarity-bar-container mt-4">
+                                    <div class="rarity-bar"></div>
+                                </div>
+                                <div class="d-flex justify-content-between font-mono small text-muted mt-1">
+                                    <span>RARITY RATE</span>
+                                    <span>85%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scroll-indicator" onclick="scrollToId('categories')">
+                <i data-lucide="chevron-down" class="text-cyan icon-xl animate-bounce"></i>
+            </div>
+        </section>
+
+        <!-- CATEGORIES SECTION -->
+        <section id="categories" class="py-5 position-relative bg-black z-10">
+            <div class="container py-5">
+                <div class="reveal-on-scroll section-header mb-5 d-flex align-items-end gap-3">
+                    <h2 class="font-bangers section-title m-0">SECTOR <span class="gradient-text">SELECT</span></h2>
+                    <div class="striped-bar"></div>
+                </div>
+
+                <div class="row g-4" id="categories-container">
+                    <!-- Categories injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCT GRID SECTION -->
+        <section id="product-grid" class="py-5 bg-black border-top-glass min-vh-100 position-relative z-10">
+            <div class="container py-5">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-end mb-5 border-bottom-glass pb-4 reveal-on-scroll">
+                    <div>
+                        <h2 class="font-bangers section-title m-0" id="current-category-title">ALL LOOT</h2>
+                        <p class="font-mono text-cyan small tracking-widest mt-2">// FILTER: <span id="current-filter-name">ALL</span></p>
+                    </div>
+                    <button onclick="filterCategory('all')" class="btn btn-sm btn-outline-pink font-mono skew-btn">VIEW ALL_</button>
+                </div>
+
+                <div id="products-container" class="row g-5">
+                    <!-- Products injected via JS -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- MYSTERY PROMO -->
+        <section class="py-5 position-relative overflow-hidden border-y-glass bg-purple-glow">
+            <div class="container text-center py-5 position-relative z-10">
+                <div class="reveal-on-scroll">
+                    <h2 class="font-bangers display-3 mb-4">UNLEASH THE <br><span class="text-purple text-glow">MYSTERY BOX</span></h2>
+                    <p class="text-gray-300 lead mb-5 mx-auto" style="max-width: 600px;">
+                        Get 3-5 randomized high-quality items worth over $150 for just $79. Only 100 boxes available per month!
+                    </p>
+                    <button onclick="filterCategory('myst_box')" class="btn btn-purple btn-lg skew-btn px-5 py-3 font-bangers tracking-wider hover-scale">
+                        CLAIM YOURS
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black py-5 border-top-glass position-relative z-10">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-4">
+                        <i data-lucide="ghost" class="text-pink icon-lg"></i>
+                        <span class="font-black italic text-2xl">AKIBA<span class="text-pink">LANE</span></span>
+                    </div>
+                    <p class="text-muted">The premier destination for anime collectors. Founded by fans, for fans. Join our community and level up your shelf today.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="text-white font-bold uppercase tracking-widest mb-4 small">Quick Links</h5>
+                    <ul class="list-unstyled text-muted d-grid gap-2">
+                        <li><a href="#" class="footer-link">Track Order</a></li>
+                        <li><a href="#" class="footer-link">Shipping Policy</a></li>
+                        <li><a href="#" class="footer-link">Returns</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5 class="text-white font-bold uppercase tracking-widest mb-4 small">Community</h5>
+                    <ul class="list-unstyled text-muted d-grid gap-2">
+                        <li><a href="#" class="footer-link">Discord Server</a></li>
+                        <li><a href="#" class="footer-link">Instagram</a></li>
+                        <li><a href="#" class="footer-link">Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top-glass mt-5 pt-4 d-flex justify-content-between flex-wrap text-muted small">
+                <p>© 2026 AKIBA LANE. Built with passion for the culture.</p>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-muted">Privacy</a>
+                    <a href="#" class="text-muted">Terms</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-container" class="position-fixed bottom-0 end-0 p-4" style="z-index: 1100;"></div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
