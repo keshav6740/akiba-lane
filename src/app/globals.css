@@ -24,6 +24,7 @@ body {
   background: var(--background);
   font-family: var(--font-orbitron), sans-serif;
   overflow-x: hidden;
+  cursor: none;
 }
 
 /* Noise Overlay */
@@ -31,73 +32,87 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-/* Cyberpunk Grid */
-.bg-grid-perspective {
-  background-size: 50px 50px;
-  background-image:
-    linear-gradient(to right, rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
-  transform: perspective(500px) rotateX(60deg);
-  transform-origin: center top;
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  left: -50%;
-  top: 0;
-  z-index: -1;
-  animation: grid-move 20s linear infinite;
-}
-
-@keyframes grid-move {
-  0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
-  100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
-}
-
-/* Manga Speed Lines */
-.manga-lines {
-  background: repeating-conic-gradient(
-    from 0deg,
-    transparent 0deg 10deg,
-    rgba(255, 255, 255, 0.03) 10deg 20deg
+/* LIQUID METAL TEXT */
+.liquid-metal {
+  background-image: linear-gradient(
+    -75deg,
+    transparent 0,
+    transparent 5%,
+    rgba(255, 255, 255, 0.5) 5%,
+    rgba(255, 255, 255, 0.5) 10%,
+    transparent 10%,
+    transparent 100%
   );
-  position: absolute;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
-  animation: spin-slow 60s linear infinite;
-  z-index: -1;
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 3s infinite linear;
 }
 
-@keyframes spin-slow {
-  to { transform: rotate(360deg); }
-}
-
-/* Glitch Text */
-.glitch-text {
+.chrome-text {
+  background: linear-gradient(
+    to bottom,
+    #ffffff 0%,
+    #e0e0e0 40%,
+    #a0a0a0 50%,
+    #404040 51%,
+    #808080 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0px 2px 0px rgba(0,0,0,0.5);
   position: relative;
 }
 
-.glitch-text::before,
-.glitch-text::after {
+.chrome-text::after {
   content: attr(data-text);
   position: absolute;
-  top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 40%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  z-index: 2;
 }
 
+@keyframes shine {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* 3D CYBER FLOOR */
+.cyber-plane {
+  width: 200%;
+  height: 100%;
+  position: absolute;
+  bottom: -50%;
+  left: -50%;
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.3) 1px, transparent 1px);
+  background-size: 100px 100px;
+  transform: perspective(500px) rotateX(60deg);
+  animation: plane-move 5s linear infinite;
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%);
+  z-index: -1;
+}
+
+@keyframes plane-move {
+  0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+  100% { transform: perspective(500px) rotateX(60deg) translateY(100px); }
+}
+
+/* Glitch Text & Other Utils */
+.glitch-text { position: relative; }
+.glitch-text::before, .glitch-text::after {
+  content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+}
 .glitch-text::before {
-  left: 2px;
-  text-shadow: -1px 0 var(--anime-pink);
-  clip: rect(24px, 550px, 90px, 0);
+  left: 2px; text-shadow: -1px 0 var(--anime-pink); clip: rect(24px, 550px, 90px, 0);
   animation: glitch-anim-2 3s infinite linear alternate-reverse;
 }
-
 .glitch-text::after {
-  left: -2px;
-  text-shadow: -1px 0 var(--anime-cyan);
-  clip: rect(85px, 550px, 140px, 0);
+  left: -2px; text-shadow: -1px 0 var(--anime-cyan); clip: rect(85px, 550px, 140px, 0);
   animation: glitch-anim 2.5s infinite linear alternate-reverse;
 }
 
@@ -109,7 +124,6 @@ body {
   80% { clip: rect(20px, 9999px, 90px, 0); }
   100% { clip: rect(60px, 9999px, 80px, 0); }
 }
-
 @keyframes glitch-anim-2 {
   0% { clip: rect(60px, 9999px, 90px, 0); }
   20% { clip: rect(10px, 9999px, 40px, 0); }
@@ -119,11 +133,20 @@ body {
   100% { clip: rect(20px, 9999px, 60px, 0); }
 }
 
-/* UI Elements */
-.clip-button {
-  clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+/* HOLOGRAPHIC SHIMMER */
+.holo-effect { position: relative; overflow: hidden; }
+.holo-effect::after {
+  content: ""; position: absolute; top: 0; left: -100%; width: 200%; height: 100%;
+  background: linear-gradient(115deg, transparent 20%, rgba(255, 0, 85, 0.4) 40%, rgba(0, 255, 255, 0.4) 60%, transparent 80%);
+  opacity: 0; transition: opacity 0.3s; pointer-events: none; mix-blend-mode: color-dodge; transform: skewX(-20deg);
+}
+.group:hover .holo-effect::after { opacity: 1; animation: holo-slide 1.5s infinite linear; }
+@keyframes holo-slide {
+  0% { transform: translateX(-100%) skewX(-20deg); }
+  100% { transform: translateX(50%) skewX(-20deg); }
 }
 
-.clip-card {
-  clip-path: polygon(0 0, 90% 0, 100% 10%, 100% 100%, 10% 100%, 0 90%);
-}
+.clip-button { clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%); }
+.clip-card { clip-path: polygon(0 0, 90% 0, 100% 10%, 100% 100%, 10% 100%, 0 90%); }
+.text-stroke-white { -webkit-text-stroke: 1px rgba(255,255,255,0.1); }
+.text-stroke-black { -webkit-text-stroke: 2px black; }

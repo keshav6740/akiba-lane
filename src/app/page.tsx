@@ -5,12 +5,15 @@ import ProductGrid from "@/components/ProductGrid";
 import CustomCursor from "@/components/CustomCursor";
 import CyberHUD from "@/components/CyberHUD";
 import Reveal from "@/components/Reveal";
+import Marquee from "@/components/Marquee";
+import CursorTrail from "@/components/CursorTrail";
 import { Ghost, Instagram, Twitter, Github } from "lucide-react";
 
 export default function Home() {
   return (
     <main className="min-h-screen cursor-none">
       <CustomCursor />
+      <CursorTrail />
       <CyberHUD />
       <div className="parallax-bg" />
       <Navbar />
@@ -21,6 +24,9 @@ export default function Home() {
         <div id="categories-section">
           <Categories />
         </div>
+        
+        <Marquee text="LIMITED DROP // AKIBA LANE" />
+        
         <div id="product-grid">
           <ProductGrid />
         </div>
@@ -28,8 +34,9 @@ export default function Home() {
 
       {/* Mystery Box Promotion Section */}
       <section className="py-32 px-6 bg-anime-purple/10 border-y border-anime-purple/30 relative overflow-hidden">
+        <Marquee text="MYSTERY BOX // UNLOCK RARE LOOT" direction="right" speed={30} />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-anime-purple/20 blur-[150px] rounded-full animate-pulse" />
-        <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
+        <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center mt-[-100px]">
           <Reveal>
             <h2 className="text-5xl md:text-7xl font-black italic mb-8 leading-tight">
               UNLEASH THE <br />
@@ -38,7 +45,7 @@ export default function Home() {
           </Reveal>
           <Reveal delay={0.4}>
             <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
-              Get 3-5 randomized high-quality items worth over 50 for just $79. Only 100 boxes available per month!
+              Get 3-5 randomized high-quality items worth over $150 for just $79. Only 100 boxes available per month!
             </p>
           </Reveal>
           <Reveal delay={0.6}>

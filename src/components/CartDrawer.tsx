@@ -31,7 +31,7 @@ ${itemsList}
 Please confirm availability and payment details.
     `.trim();
 
-    const phone = "919876543210"; // REPLACE WITH YOUR NUMBER
+    const phone = "9426340289";
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };

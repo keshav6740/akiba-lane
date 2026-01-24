@@ -18,7 +18,7 @@ export default function ProductGrid() {
   };
 
   return (
-    <section id="product-grid" className="py-24 px-6 bg-black border-t border-white/5 min-h-screen">
+    <section id="product-grid" className="py-24 px-6 bg-black border-t border-white/5 min-h-screen relative z-10">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 border-b border-white/10 pb-8">
           <div>
@@ -50,10 +50,10 @@ export default function ProductGrid() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
-                className="group relative"
+                className="group relative perspective-1000"
               >
-                {/* Manga Panel Card */}
-                <div className={`relative bg-gray-900 border-4 border-black group-hover:${getCategoryColor(product.category).replace('border-', 'border-')} clip-card overflow-hidden transition-all duration-300 shadow-[5px_5px_0px_0px_rgba(255,255,255,0.1)] group-hover:shadow-[8px_8px_0px_0px_var(--color-anime-pink)]`}>
+                {/* Manga Panel Card with Holo Effect */}
+                <div className={`relative bg-gray-900 border-4 border-black group-hover:${getCategoryColor(product.category).replace('border-', 'border-')} clip-card overflow-hidden transition-all duration-300 shadow-[5px_5px_0px_0px_rgba(255,255,255,0.1)] group-hover:shadow-[15px_15px_0px_0px_var(--color-anime-pink)] group-hover:-translate-y-2 holo-effect`}>
                   
                   {/* Comic Book Corner Triangle */}
                   <div className="absolute top-0 left-0 w-0 h-0 border-t-[40px] border-r-[40px] border-t-white border-r-transparent z-30" />
@@ -84,7 +84,7 @@ export default function ProductGrid() {
                     />
                     
                     {/* Action Text On Hover */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-bangers text-6xl text-anime-pink opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-200 z-20 pointer-events-none text-stroke-black">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-bangers text-7xl text-anime-pink opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200 z-20 pointer-events-none text-stroke-black rotate-[-12deg]">
                       POW!
                     </div>
                   </div>
@@ -108,13 +108,13 @@ export default function ProductGrid() {
                     <div className="flex gap-2 mt-4">
                       <button 
                         onClick={() => addToCart(product)}
-                        className="flex-1 bg-black text-white font-black text-sm uppercase py-3 hover:bg-anime-pink hover:-translate-y-1 transition-all clip-button flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
+                        className="flex-1 bg-black text-white font-black text-sm uppercase py-3 hover:bg-anime-pink hover:scale-105 transition-all clip-button flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
                       >
                         <ShoppingCart className="w-4 h-4" /> GET IT
                       </button>
                       <button 
                         onClick={() => toggleWishlist(product.id)}
-                        className={`w-12 border-2 border-black flex items-center justify-center hover:-translate-y-1 transition-all clip-button shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] ${wishlist.includes(product.id) ? 'bg-anime-pink text-white' : 'bg-white text-black'}`}
+                        className={`w-12 border-2 border-black flex items-center justify-center hover:scale-105 transition-all clip-button shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] ${wishlist.includes(product.id) ? 'bg-anime-pink text-white' : 'bg-white text-black'}`}
                       >
                         <Heart className={`w-5 h-5 ${wishlist.includes(product.id) ? 'fill-current' : ''}`} />
                       </button>
