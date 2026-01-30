@@ -99,7 +99,7 @@ export default function Navbar() {
                       <img src={product.image} className="w-16 h-16 object-cover" alt={product.name} />
                       <div>
                         <h4 className="font-bold text-white">{product.name}</h4>
-                        <p className="text-anime-pink text-sm">{product.currency}{product.price}</p>
+                        <p className="text-anime-pink text-sm">{product.currency}{product.price}{product.category === 'set' ? ' (each)' : ''}</p>
                       </div>
                     </div>
                     <button 

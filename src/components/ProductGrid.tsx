@@ -138,7 +138,7 @@ export default function ProductGrid({ productsToShow }: ProductGridProps) {
                         </p>
                       </div>
                       <span className="font-bangers text-xl md:text-2xl text-anime-purple">
-                        {product.currency}{product.price}
+                        {product.currency}{product.price}{product.category === 'set' ? ' (each)' : ''}
                       </span>
                     </div>
 
