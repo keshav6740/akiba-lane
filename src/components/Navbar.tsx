@@ -8,7 +8,7 @@ import { useState } from "react";
 import { products } from "@/lib/products";
 
 export default function Navbar() {
-  const { cart, setCategory, toggleCart } = useStore();
+  const { cart, setCategory, toggleCart, addToCart } = useStore();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isContactOpen, setIsContactOpen] = useState(false);

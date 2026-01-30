@@ -17,7 +17,7 @@ const CHARACTERS = [
 type Element = {
   id: number;
   char: string;
-  style: React.CSSProperties;
+  style: any;
   animation: any;
 };
 
@@ -36,10 +36,10 @@ export default function AnimeAtmosphere() {
         rotate: Math.random() * 360,
         opacity: 0.05 + Math.random() * 0.1, // Very subtle
         fontFamily: "'Noto Sans JP', sans-serif", // Ensure you have a font that supports Kanji or fallback
-        position: 'absolute',
+        position: 'absolute' as const,
         color: 'white',
         userSelect: 'none',
-        mixBlendMode: 'overlay',
+        mixBlendMode: 'overlay' as const,
       },
       animation: {
         y: [0, -20, 0],
