@@ -2,15 +2,40 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, ShoppingCart, Filter } from "lucide-react";
-import { products, categories } from "@/lib/data";
+import { products } from "@/lib/products";
+import { categories } from "@/lib/data";
 import { useStore } from "@/context/StoreContext";
+import { useState, useMemo } from "react";
+import { Product } from "@/lib/data";
 
-export default function ProductGrid() {
+type ProductGridProps = {
+  productsToShow?: Product[];
+};
+
+export default function ProductGrid({ productsToShow }: ProductGridProps) {
   const { currentCategory, addToCart, toggleWishlist, wishlist, setCategory } = useStore();
+  const [sortOrder, setSortOrder] = useState("default");
 
-  const filteredProducts = currentCategory === "all" 
-    ? products 
-    : products.filter(p => p.category === currentCategory);
+  const filteredProducts = useMemo(() => {
+    let filtered = productsToShow 
+      ? productsToShow
+      : currentCategory === "all" 
+        ? products 
+        : products.filter(p => p.category === currentCategory);
+
+    switch (sortOrder) {
+      case "price-asc":
+        return [...filtered].sort((a, b) => a.price - b.price);
+      case "price-desc":
+        return [...filtered].sort((a, b) => b.price - a.price);
+      case "name-asc":
+        return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
+      case "name-desc":
+        return [...filtered].sort((a, b) => b.name.localeCompare(a.name));
+      default:
+        return filtered;
+    }
+  }, [currentCategory, sortOrder, productsToShow]);
 
   const getCategoryColor = (catId: string) => {
     const cat = categories.find(c => c.id === catId);
@@ -29,12 +54,24 @@ export default function ProductGrid() {
               <Filter className="w-4 h-4" /> // FILTER: {currentCategory.toUpperCase()}
             </p>
           </div>
-          <button 
-            onClick={() => setCategory("all")}
-            className="px-6 py-2 border border-anime-pink text-anime-pink font-mono text-xs hover:bg-anime-pink hover:text-white transition-colors clip-button"
-          >
-            VIEW ALL_
-          </button>
+          <div className="flex gap-4 items-center">
+            <select 
+              onChange={(e) => setSortOrder(e.target.value)} 
+              className="bg-black border border-white/20 rounded-md px-3 py-2 text-white font-mono text-xs"
+            >
+              <option value="default">Sort By</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="name-asc">Name: A-Z</option>
+              <option value="name-desc">Name: Z-A</option>
+            </select>
+            <button 
+              onClick={() => setCategory("all")}
+              className="px-6 py-2 border border-anime-pink text-anime-pink font-mono text-xs hover:bg-anime-pink hover:text-white transition-colors clip-button"
+            >
+              VIEW ALL_
+            </button>
+          </div>
         </div>
 
         <motion.div 
@@ -77,7 +114,7 @@ export default function ProductGrid() {
                     <img 
                       src={product.image} 
                       alt={product.name}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-500"
+                      className="absolute inset-0 w-full h-full object-contain group-hover:scale-110 transition-all duration-500"
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}

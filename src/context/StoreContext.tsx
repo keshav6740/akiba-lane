@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Product } from "@/lib/data";
 
 type CartItem = Product & { quantity: number };
@@ -26,6 +26,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [currentCategory, setCurrentCategory] = useState("all");
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedWishlist = localStorage.getItem("wishlist");
+    if (storedWishlist) {
+      setWishlist(JSON.parse(storedWishlist));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
 
   const showNotification = (msg: string) => {
     setNotification(msg);

@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function CartDrawer() {
   const { cart, isCartOpen, toggleCart, removeFromCart } = useStore();
   const [checkoutMode, setCheckoutMode] = useState(false);
-  const [formData, setFormData] = useState({ name: "", phone: "", city: "" });
+  const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -21,7 +21,7 @@ export default function CartDrawer() {
 ------------------
 *Customer:* ${formData.name}
 *Phone:* ${formData.phone}
-*City:* ${formData.city}
+*Address:* ${formData.address}
 ------------------
 *ITEMS:*
 ${itemsList}
@@ -29,6 +29,7 @@ ${itemsList}
 *TOTAL ESTIMATE:* Rs. ${total}
 ------------------
 Please confirm availability and payment details.
+Also provide me with theme stickers.
     `.trim();
 
     const phone = "9426340289";
@@ -144,14 +145,14 @@ Please confirm availability and payment details.
                     </div>
                     
                     <div>
-                      <label className="block text-gray-400 mb-2">LOCATION (City)</label>
-                      <input 
+                      <label className="block text-gray-400 mb-2">DELIVERY ADDRESS</label>
+                      <textarea 
                         required
-                        type="text" 
                         className="w-full bg-gray-900 border border-white/20 p-3 focus:border-anime-pink outline-none text-white"
-                        placeholder="Enter your city"
-                        value={formData.city}
-                        onChange={e => setFormData({...formData, city: e.target.value})}
+                        placeholder="Enter your full address"
+                        value={formData.address}
+                        onChange={e => setFormData({...formData, address: e.target.value})}
+                        rows={4}
                       />
                     </div>
 

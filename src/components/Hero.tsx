@@ -73,29 +73,7 @@ export default function Hero() {
             <div className="manga-lines opacity-10" />
             <div className="cyber-plane opacity-30" />
       
-            {/* Floating Debris */}      {Array.from({ length: 5 }).map((_, i) => (
-         <motion.div
-            key={i}
-            className="absolute border border-anime-cyan/30 bg-anime-cyan/5 backdrop-blur-sm z-0"
-            style={{
-                width: 50 + Math.random() * 100,
-                height: 50 + Math.random() * 100,
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                borderRadius: Math.random() > 0.5 ? '50%' : '0%',
-            }}
-            animate={{
-                y: [0, -100, 0],
-                rotate: [0, 360],
-                scale: [1, 1.2, 1],
-            }}
-            transition={{
-                duration: 10 + Math.random() * 20,
-                repeat: Infinity,
-                ease: "linear"
-            }}
-         />
-      ))}
+            {/* Floating Debris */}      
 
       <div className="relative z-10 w-full max-w-7xl px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         

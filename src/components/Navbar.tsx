@@ -5,7 +5,7 @@ import { ShoppingCart, Ghost, Zap, Search, X } from "lucide-react";
 import Link from "next/link";
 import { useStore } from "@/context/StoreContext";
 import { useState } from "react";
-import { products } from "@/lib/data";
+import { products } from "@/lib/products";
 
 export default function Navbar() {
   const { cart, setCategory, toggleCart } = useStore();
@@ -28,30 +28,24 @@ export default function Navbar() {
         animate={{ y: 0 }}
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-black/80 backdrop-blur-md border-b border-white/10"
       >
-        <div className="flex items-center gap-2 group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-          <Zap className="text-anime-pink w-8 h-8 fill-anime-pink group-hover:animate-pulse" />
-          <span className="text-2xl font-black italic tracking-tighter text-white group-hover:animate-glitch">
-            AKIBA<span className="text-anime-pink">LANE</span>
-          </span>
+        <div className="flex items-center gap-2 group cursor-pointer">
+          <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} >
+            <Zap className="text-anime-pink w-8 h-8 fill-anime-pink group-hover:animate-pulse" />
+            <span className="text-2xl font-black italic tracking-tighter text-white group-hover:animate-glitch">
+              AKIBA<span className="text-anime-pink">LANE</span>
+            </span>
+          </Link>
         </div>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium uppercase tracking-widest font-orbitron">
-          <button onClick={() => handleNavClick("individual")} className="hover:text-anime-pink transition-colors relative group">
-            Figures
+          <Link href="/#shop" className="hover:text-anime-pink transition-colors relative group">
+            Shop
             <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-anime-pink group-hover:w-full transition-all duration-300" />
-          </button>
-          <button onClick={() => handleNavClick("myst_box")} className="hover:text-anime-pink transition-colors relative group">
-            Mystery Box
+          </Link>
+          <Link href="/wishlist" className="hover:text-anime-pink transition-colors relative group">
+            Wishlist
             <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-anime-pink group-hover:w-full transition-all duration-300" />
-          </button>
-          <button onClick={() => handleNavClick("hp")} className="hover:text-anime-pink transition-colors relative group">
-            Harry Potter
-            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-anime-pink group-hover:w-full transition-all duration-300" />
-          </button>
-          <button onClick={() => handleNavClick("set")} className="hover:text-anime-pink transition-colors relative group">
-            Sets
-            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-anime-pink group-hover:w-full transition-all duration-300" />
-          </button>
+          </Link>
         </div>
 
         <div className="flex items-center gap-4">
@@ -95,15 +89,28 @@ export default function Navbar() {
               
               <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto">
                 {searchQuery && filteredProducts.map(product => (
-                  <div key={product.id} className="flex gap-4 p-4 border border-white/10 hover:border-anime-cyan bg-gray-900/50 cursor-pointer" onClick={() => {
-                    // Logic to jump to product could be added here
+                  <div key={product.id} className="flex items-center justify-between gap-4 p-4 border border-white/10 hover:border-anime-cyan bg-gray-900/50 cursor-pointer" onClick={() => {
+                    setCategory(product.category);
                     setIsSearchOpen(false);
+                    const el = document.getElementById('product-grid');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}>
-                    <img src={product.image} className="w-16 h-16 object-cover" alt={product.name} />
-                    <div>
-                      <h4 className="font-bold text-white">{product.name}</h4>
-                      <p className="text-anime-pink text-sm">{product.currency}{product.price}</p>
+                    <div className="flex items-center gap-4">
+                      <img src={product.image} className="w-16 h-16 object-cover" alt={product.name} />
+                      <div>
+                        <h4 className="font-bold text-white">{product.name}</h4>
+                        <p className="text-anime-pink text-sm">{product.currency}{product.price}</p>
+                      </div>
                     </div>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart(product);
+                      }}
+                      className="px-4 py-2 border border-anime-cyan text-anime-cyan font-mono text-xs hover:bg-anime-cyan hover:text-white transition-colors clip-button"
+                    >
+                      ADD
+                    </button>
                   </div>
                 ))}
               </div>
