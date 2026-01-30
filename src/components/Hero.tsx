@@ -145,7 +145,7 @@ export default function Hero() {
             <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-anime-cyan" />
             <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-anime-cyan" />
             
-            <div className="absolute inset-0 bg-[url('https://media.istockphoto.com/id/1364505362/vector/abstract-technology-background-concept-circle-circuit-digital-metal-blue-on-grey-background.jpg?s=612x612&w=0&k=20&c=K6qW9Tqg0DrsXyTq0DrsXyTq0DrsXyTq0DrsXyTq0DrsXyTq=')] opacity-20 mix-blend-overlay bg-cover" />
+
 
             {/* Content inside card */}
             <div className="relative z-10 h-full flex flex-col justify-between transform-style-3d translate-z-20">

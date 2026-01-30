@@ -32,29 +32,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Mystery Box Promotion Section */}
-      <section className="py-32 px-6 bg-anime-purple/10 border-y border-anime-purple/30 relative overflow-hidden">
-        <Marquee text="MYSTERY BOX // UNLOCK RARE LOOT" direction="right" speed={30} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-anime-purple/20 blur-[150px] rounded-full animate-pulse" />
-        <div className="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center mt-[-100px]">
-          <Reveal>
-            <h2 className="text-5xl md:text-7xl font-black italic mb-8 leading-tight">
-              UNLEASH THE <br />
-              <span className="text-anime-purple text-glow">MYSTERY BOX</span>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.4}>
-            <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
-              Get 3-5 randomized high-quality items worth over $150 for just $79. Only 100 boxes available per month!
-            </p>
-          </Reveal>
-          <Reveal delay={0.6}>
-            <button className="px-12 py-5 bg-anime-purple hover:bg-anime-purple/80 text-white font-black text-xl italic skew-x-[-12deg] transition-all transform hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(112,0,255,0.4)]">
-              <span className="skew-x-[12deg] inline-block">CLAIM YOURS</span>
-            </button>
-          </Reveal>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="bg-black py-20 px-6 border-t border-white/5 relative z-10">
@@ -71,14 +48,8 @@ export default function Home() {
                 The premier destination for anime collectors. Founded by fans, for fans. Join our community and level up your shelf today.
               </p>
               <div className="flex gap-4">
-                <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/10 rounded-full hover:border-anime-pink transition-colors">
+                <a href="https://www.instagram.com/akibalane.official?igsh=eTUwMDBxb2FrZzFk" className="w-10 h-10 flex items-center justify-center border border-white/10 rounded-full hover:border-anime-pink transition-colors">
                   <Instagram className="w-5 h-5" />
-                </a>
-                <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/10 rounded-full hover:border-anime-pink transition-colors">
-                  <Twitter className="w-5 h-5" />
-                </a>
-                <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/10 rounded-full hover:border-anime-pink transition-colors">
-                  <Github className="w-5 h-5" />
                 </a>
               </div>
             </Reveal>

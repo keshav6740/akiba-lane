@@ -130,14 +130,14 @@ export default function ProductGrid({ productsToShow }: ProductGridProps) {
                   <div className="p-5 bg-white text-black relative z-10">
                     <div className="flex justify-between items-start mb-3">
                       <div>
-                        <h3 className="font-black text-xl italic uppercase leading-none mb-1">
+                        <h3 className="font-black text-lg md:text-xl italic uppercase leading-tight mb-1">
                           {product.name}
                         </h3>
                         <p className="text-[10px] font-mono bg-black text-white inline-block px-1">
                           #{product.id}
                         </p>
                       </div>
-                      <span className="font-bangers text-2xl text-anime-purple">
+                      <span className="font-bangers text-xl md:text-2xl text-anime-purple">
                         {product.currency}{product.price}
                       </span>
                     </div>
