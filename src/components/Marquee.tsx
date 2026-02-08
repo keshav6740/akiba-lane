@@ -13,7 +13,7 @@ export default function Marquee({ text, direction = "left", speed = 20 }: { text
       >
         {Array.from({ length: 10 }).map((_, i) => (
           <span key={i} className="text-[10rem] md:text-[15rem] font-black font-bangers mx-4 text-transparent text-stroke-white leading-none">
-            {text} •
+            {text} 
           </span>
         ))}
       </motion.div>
@@ -25,10 +25,11 @@ export default function Marquee({ text, direction = "left", speed = 20 }: { text
       >
          {Array.from({ length: 10 }).map((_, i) => (
           <span key={i} className="text-[10rem] md:text-[15rem] font-black font-bangers mx-4 text-transparent text-stroke-white leading-none">
-            {text} •
+            {text} 
           </span>
         ))}
       </motion.div>
     </div>
   );
 }
+

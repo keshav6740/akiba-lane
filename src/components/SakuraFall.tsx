@@ -11,8 +11,8 @@ export default function SakuraFall() {
   const [petals, setPetals] = useState<Petal[]>([]);
 
   useEffect(() => {
-    // Generate 30 petals
-    setPetals(Array.from({ length: 30 }, (_, i) => ({
+    const count = typeof window !== "undefined" && window.innerWidth < 768 ? 10 : 30;
+    setPetals(Array.from({ length: count }, (_, i) => ({
       id: i,
       style: {
         left: `${Math.random() * 100}%`,
@@ -40,7 +40,9 @@ export default function SakuraFall() {
           }
         }
       `}</style>
-      
+      {petals.map((petal) => (
+        <div key={petal.id} style={petal.style} />
+      ))}
     </div>
   );
 }

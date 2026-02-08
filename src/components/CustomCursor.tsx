@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function CustomCursor() {
+  if (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(pointer: coarse)").matches) {
+    return null;
+  }
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
 

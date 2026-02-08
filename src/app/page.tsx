@@ -4,90 +4,40 @@ import Categories from "@/components/Categories";
 import ProductGrid from "@/components/ProductGrid";
 import CustomCursor from "@/components/CustomCursor";
 import CyberHUD from "@/components/CyberHUD";
-import Reveal from "@/components/Reveal";
 import Marquee from "@/components/Marquee";
 import CursorTrail from "@/components/CursorTrail";
-import { Ghost, Instagram, Twitter, Github } from "lucide-react";
+import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 
 export default function Home() {
   return (
-    <main className="min-h-screen cursor-none">
+    <main className="min-h-screen cursor-none snap-container">
       <CustomCursor />
       <CursorTrail />
       <CyberHUD />
       <div className="parallax-bg" />
       <Navbar />
       
-      <Hero />
+      <div className="snap-section">
+        <Hero />
+      </div>
+
       
       <div id="shop" className="relative z-10 bg-black">
-        <div id="categories-section">
+        <div id="categories-section" className="snap-section">
           <Categories />
         </div>
         
         <Marquee text="LIMITED DROP // AKIBA LANE" />
         
-        <div id="product-grid">
+        <div id="product-grid" className="snap-section">
           <ProductGrid />
         </div>
       </div>
 
+      <Footer />
 
-      {/* Footer */}
-      <footer className="bg-black py-20 px-6 border-t border-white/5 relative z-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div className="col-span-1 md:col-span-2">
-            <Reveal direction="right">
-              <div className="flex items-center gap-2 mb-6">
-                <Ghost className="text-anime-pink w-8 h-8" />
-                <span className="text-2xl font-black italic tracking-tighter">
-                  AKIBA<span className="text-anime-pink">LANE</span>
-                </span>
-              </div>
-              <p className="text-gray-500 max-w-sm mb-8">
-                The premier destination for anime collectors. Founded by fans, for fans. Join our community and level up your shelf today.
-              </p>
-              <div className="flex gap-4">
-                <a href="https://www.instagram.com/akibalane.official?igsh=eTUwMDBxb2FrZzFk" className="w-10 h-10 flex items-center justify-center border border-white/10 rounded-full hover:border-anime-pink transition-colors">
-                  <Instagram className="w-5 h-5" />
-                </a>
-              </div>
-            </Reveal>
-          </div>
-          
-          <div>
-            <Reveal delay={0.3}>
-              <h4 className="font-bold mb-6 text-white uppercase tracking-widest text-sm">Quick Links</h4>
-              <ul className="space-y-4 text-gray-500 font-medium">
-                <li><a href="#" className="hover:text-anime-pink transition-colors">Track Order</a></li>
-                <li><a href="#" className="hover:text-anime-pink transition-colors">Affiliates</a></li>
-                <li><a href="#" className="hover:text-anime-pink transition-colors">Shipping Policy</a></li>
-                <li><a href="#" className="hover:text-anime-pink transition-colors">Returns</a></li>
-              </ul>
-            </Reveal>
-          </div>
-
-          <div>
-            <Reveal delay={0.5}>
-              <h4 className="font-bold mb-6 text-white uppercase tracking-widest text-sm">Community</h4>
-              <ul className="space-y-4 text-gray-500 font-medium">
-                <li><a href="#" className="hover:text-anime-pink transition-colors">Discord Server</a></li>
-                <li><a href="#" className="hover:text-anime-pink transition-colors">Newsletter</a></li>
-                <li><a href="#" className="hover:text-anime-pink transition-colors">Anime Blog</a></li>
-                <li><a href="#" className="hover:text-anime-pink transition-colors">Events</a></li>
-              </ul>
-            </Reveal>
-          </div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-600 text-sm">© 2026 AKIBA LANE. Built with passion for the culture.</p>
-          <div className="flex gap-6 text-gray-600 text-sm">
-            <a href="#" className="hover:text-white">Privacy</a>
-            <a href="#" className="hover:text-white">Terms</a>
-          </div>
-        </div>
-      </footer>
+      <ScrollToTop />
     </main>
   );
 }

@@ -4,6 +4,9 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect } from "react";
 
 export default function CursorTrail() {
+  if (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(pointer: coarse)").matches) {
+    return null;
+  }
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 

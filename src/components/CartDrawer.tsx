@@ -8,20 +8,87 @@ import { useState } from "react";
 export default function CartDrawer() {
   const { cart, isCartOpen, toggleCart, removeFromCart } = useStore();
   const [checkoutMode, setCheckoutMode] = useState(false);
-  const [formData, setFormData] = useState({ name: "", phone: "", address: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    address1: "",
+    address2: "",
+    state: "",
+    city: "",
+    pincode: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const handleCheckout = (e: React.FormEvent) => {
+  const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const itemsList = cart.map(item => `- ${item.name} x${item.quantity} (${item.currency}${item.price})`).join('\n');
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const itemsList = cart
+      .map(item => `- ${item.name} x${item.quantity} (${item.currency}${item.price})`)
+      .join("\n");
+    const address = [
+      formData.address1,
+      formData.address2,
+      formData.city,
+      formData.state,
+      formData.pincode,
+    ]
+      .filter(Boolean)
+      .join(", ");
+    const orderPayload = {
+      name: formData.name,
+      phone: formData.phone,
+      address,
+      items: cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        currency: item.currency,
+        quantity: item.quantity,
+      })),
+      total,
+      currency: "Rs.",
+      status_paid: false,
+      status_fulfilled: false,
+      source: "whatsapp",
+    };
+
+    let orderId: string | null = null;
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderPayload),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setSubmitError("Order save failed. Please try again or contact support.");
+      } else {
+        orderId = json.id || null;
+        // Fire and forget sheet sync to keep checkout fast
+        fetch("/api/orders/sync-sheet", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ order: json.order }),
+          keepalive: true,
+        }).catch(() => {});
+      }
+    } catch {
+      setSubmitError("Order save failed. Please try again or contact support.");
+    } finally {
+      setIsSubmitting(false);
+    }
+
     const message = `
 *NEW ORDER REQUEST*
 ------------------
 *Customer:* ${formData.name}
 *Phone:* ${formData.phone}
-*Address:* ${formData.address}
+*Address:* ${address}
 ------------------
 *ITEMS:*
 ${itemsList}
@@ -34,7 +101,7 @@ Also provide me with theme stickers.
 
     const phone = "9426340289";
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    window.open(url, "_blank");
   };
 
   return (
@@ -114,7 +181,7 @@ Also provide me with theme stickers.
               ) : (
                 <div className="flex-1 flex flex-col">
                   <button onClick={() => setCheckoutMode(false)} className="text-gray-500 mb-6 hover:text-white text-sm">
-                    ← Back to Cart
+                    {"\u2190 Back to Cart"}
                   </button>
                   
                   <h3 className="text-xl font-bold mb-6 font-bangers text-anime-cyan">TRANSMISSION DETAILS</h3>
@@ -145,18 +212,110 @@ Also provide me with theme stickers.
                     </div>
                     
                     <div>
-                      <label className="block text-gray-400 mb-2">DELIVERY ADDRESS</label>
-                      <textarea 
+                      <label className="block text-gray-400 mb-2">STREET ADDRESS (LINE 1)</label>
+                      <input
                         required
+                        type="text"
                         className="w-full bg-gray-900 border border-white/20 p-3 focus:border-anime-pink outline-none text-white"
-                        placeholder="Enter your full address"
-                        value={formData.address}
-                        onChange={e => setFormData({...formData, address: e.target.value})}
-                        rows={4}
+                        placeholder="House no, Street, Area"
+                        value={formData.address1}
+                        onChange={e => setFormData({ ...formData, address1: e.target.value })}
                       />
                     </div>
 
-                    <button type="submit" className="w-full bg-green-600 text-white font-black py-4 mt-8 hover:bg-green-500 transition-colors uppercase flex items-center justify-center gap-2">
+                    <div>
+                      <label className="block text-gray-400 mb-2">STREET ADDRESS (LINE 2)</label>
+                      <input
+                        type="text"
+                        className="w-full bg-gray-900 border border-white/20 p-3 focus:border-anime-pink outline-none text-white"
+                        placeholder="Landmark, Apartment, etc. (optional)"
+                        value={formData.address2}
+                        onChange={e => setFormData({ ...formData, address2: e.target.value })}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-400 mb-2">STATE</label>
+                      <select
+                        required
+                        className="w-full bg-gray-900 border border-white/20 p-3 focus:border-anime-pink outline-none text-white"
+                        value={formData.state}
+                        onChange={e => setFormData({ ...formData, state: e.target.value })}
+                      >
+                        <option value="">Select state</option>
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                        <option value="Assam">Assam</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Manipur">Manipur</option>
+                        <option value="Meghalaya">Meghalaya</option>
+                        <option value="Mizoram">Mizoram</option>
+                        <option value="Nagaland">Nagaland</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Sikkim">Sikkim</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Tripura">Tripura</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                        <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                        <option value="Ladakh">Ladakh</option>
+                        <option value="Lakshadweep">Lakshadweep</option>
+                        <option value="Puducherry">Puducherry</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-400 mb-2">CITY</label>
+                      <input
+                        required
+                        type="text"
+                        className="w-full bg-gray-900 border border-white/20 p-3 focus:border-anime-pink outline-none text-white"
+                        placeholder="Type your city"
+                        value={formData.city}
+                        onChange={e => setFormData({ ...formData, city: e.target.value })}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-gray-400 mb-2">PIN CODE</label>
+                      <input
+                        required
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]{6}"
+                        className="w-full bg-gray-900 border border-white/20 p-3 focus:border-anime-pink outline-none text-white"
+                        placeholder="6-digit PIN"
+                        value={formData.pincode}
+                        onChange={e => setFormData({ ...formData, pincode: e.target.value })}
+                      />
+                    </div>
+
+                  {submitError && (
+                    <p className="text-red-400 text-xs">{submitError}</p>
+                  )}
+                  <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-green-600 text-white font-black py-4 mt-8 hover:bg-green-500 transition-colors uppercase flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
                       <MessageCircle className="w-5 h-5" /> SEND VIA WHATSAPP
                     </button>
                   </form>
@@ -169,3 +328,4 @@ Also provide me with theme stickers.
     </AnimatePresence>
   );
 }
+

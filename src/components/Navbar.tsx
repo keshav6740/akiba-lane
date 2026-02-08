@@ -1,70 +1,118 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart, Ghost, Zap, Search, X } from "lucide-react";
+import { ShoppingCart, Ghost, Zap, Search, X, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useStore } from "@/context/StoreContext";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { products } from "@/lib/products";
+import { categories } from "@/lib/data";
 
 export default function Navbar() {
   const { cart, setCategory, toggleCart, addToCart } = useStore();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsCategoriesOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
-
-  const handleNavClick = (cat: string) => {
-    setCategory(cat);
-  };
 
   const filteredProducts = products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <>
-      <motion.nav 
+      <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-black/80 backdrop-blur-md border-b border-white/10"
+        className="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-black/70 backdrop-blur-xl border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)]"
       >
-        <div className="flex items-center gap-2 group cursor-pointer">
-          <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} >
-            <Zap className="text-anime-pink w-8 h-8 fill-anime-pink group-hover:animate-pulse" />
-            <span className="text-2xl font-black italic tracking-tighter text-white group-hover:animate-glitch">
-              AKIBA<span className="text-anime-pink">LANE</span>
-            </span>
-          </Link>
-        </div>
-
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium uppercase tracking-widest font-orbitron">
-          <Link href="/#shop" className="hover:text-anime-pink transition-colors relative group">
-            Shop
-            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-anime-pink group-hover:w-full transition-all duration-300" />
-          </Link>
-          <Link href="/wishlist" className="hover:text-anime-pink transition-colors relative group">
-            Wishlist
-            <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-anime-pink group-hover:w-full transition-all duration-300" />
-          </Link>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Search onClick={() => setIsSearchOpen(true)} className="w-5 h-5 cursor-pointer hover:text-anime-cyan transition-colors" />
-          
-          <div onClick={toggleCart} className="relative cursor-pointer group hover:scale-110 transition-transform">
-            <ShoppingCart className="w-6 h-6 group-hover:text-anime-pink transition-colors" />
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-anime-pink text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce">
-                {cartCount}
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2 group cursor-pointer">
+            <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+              <Zap className="text-anime-pink w-8 h-8 fill-anime-pink group-hover:animate-pulse" />
+              <span className="text-2xl font-black italic tracking-tighter text-white group-hover:animate-glitch">
+                AKIBA<span className="text-anime-pink">LANE</span>
               </span>
-            )}
+            </Link>
           </div>
-          
-          <Ghost onClick={() => setIsContactOpen(true)} className="w-6 h-6 cursor-pointer hover:text-anime-purple transition-colors hover:rotate-12" />
+
+          <div className="hidden md:flex items-center gap-8 text-xs font-medium uppercase tracking-[0.3em] font-orbitron">
+            <Link href="/#shop" className="hover:text-anime-pink transition-colors relative group">
+              Shop
+              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-anime-pink group-hover:w-full transition-all duration-300" />
+            </Link>
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setIsCategoriesOpen((v) => !v)}
+                className="hover:text-anime-pink transition-colors relative group flex items-center gap-1"
+              >
+                Categories
+                <ChevronDown className="w-4 h-4" />
+                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-anime-pink group-hover:w-full transition-all duration-300" />
+              </button>
+              {isCategoriesOpen && (
+                <div className="absolute top-8 left-0 bg-black/90 border border-white/10 shadow-xl w-52 z-50 backdrop-blur-xl">
+                  <button
+                    className="w-full text-left px-4 py-2 text-xs hover:bg-white/5"
+                    onClick={() => {
+                      setIsCategoriesOpen(false);
+                      const el = document.getElementById("categories-section");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                    }}
+                  >
+                    All Categories
+                  </button>
+                  {categories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      className="w-full text-left px-4 py-2 text-xs hover:bg-white/5"
+                      onClick={() => {
+                        setCategory(cat.id);
+                        setIsCategoriesOpen(false);
+                        const el = document.getElementById("product-grid");
+                        if (el) el.scrollIntoView({ behavior: "smooth" });
+                      }}
+                    >
+                      {cat.title}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <Link href="/wishlist" className="hover:text-anime-pink transition-colors relative group">
+              Wishlist
+              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-anime-pink group-hover:w-full transition-all duration-300" />
+            </Link>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Search onClick={() => setIsSearchOpen(true)} className="w-5 h-5 cursor-pointer hover:text-anime-cyan transition-colors" />
+
+            <div onClick={toggleCart} className="relative cursor-pointer group hover:scale-110 transition-transform">
+              <ShoppingCart className="w-6 h-6 group-hover:text-anime-pink transition-colors" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-anime-pink text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce">
+                  {cartCount}
+                </span>
+              )}
+            </div>
+
+            <Ghost onClick={() => setIsContactOpen(true)} className="w-6 h-6 cursor-pointer hover:text-anime-purple transition-colors hover:rotate-12" />
+          </div>
         </div>
       </motion.nav>
 
-      {/* Search Overlay */}
       <AnimatePresence>
         {isSearchOpen && (
           <motion.div
@@ -76,17 +124,17 @@ export default function Navbar() {
             <button onClick={() => setIsSearchOpen(false)} className="absolute top-8 right-8 text-white hover:text-anime-pink">
               <X className="w-10 h-10" />
             </button>
-            
+
             <div className="max-w-4xl mx-auto">
-              <input 
+              <input
                 autoFocus
-                type="text" 
-                placeholder="SEARCH DATABASE..." 
+                type="text"
+                placeholder="SEARCH DATABASE..."
                 className="w-full bg-transparent border-b-2 border-white/20 text-4xl md:text-6xl font-black text-white py-4 outline-none focus:border-anime-cyan uppercase placeholder:text-gray-800"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              
+
               <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto">
                 {searchQuery && filteredProducts.map(product => (
                   <div key={product.id} className="flex items-center justify-between gap-4 p-4 border border-white/10 hover:border-anime-cyan bg-gray-900/50 cursor-pointer" onClick={() => {
@@ -102,7 +150,7 @@ export default function Navbar() {
                         <p className="text-anime-pink text-sm">{product.currency}{product.price}{product.category === 'set' ? ' (each)' : ''}</p>
                       </div>
                     </div>
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         addToCart(product);
@@ -119,7 +167,6 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Contact Modal */}
       <AnimatePresence>
         {isContactOpen && (
           <motion.div
@@ -129,7 +176,7 @@ export default function Navbar() {
             onClick={() => setIsContactOpen(false)}
             className="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4"
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               onClick={e => e.stopPropagation()}
@@ -138,7 +185,7 @@ export default function Navbar() {
               <button onClick={() => setIsContactOpen(false)} className="absolute top-4 right-4 hover:text-anime-purple">
                 <X className="w-6 h-6" />
               </button>
-              
+
               <div className="text-center mb-6">
                 <Ghost className="w-16 h-16 text-anime-purple mx-auto mb-4 animate-bounce" />
                 <h3 className="text-2xl font-bangers text-white">ADMIN CONTACT</h3>
