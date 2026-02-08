@@ -69,11 +69,11 @@ async function getAuth() {
     throw new Error("Missing Google service account credentials. Set GOOGLE_SERVICE_ACCOUNT_JSON or GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY.");
   }
 
-  const auth = new google.auth.JWT(clientEmail, undefined, privateKey, [
-    "https://www.googleapis.com/auth/spreadsheets",
-  ]);
-  await auth.authorize();
-  return auth;
+  const auth = new google.auth.GoogleAuth({
+    credentials: { client_email: clientEmail, private_key: privateKey },
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
+  return await auth.getClient();
 }
 
 async function getSheetTabId(sheets: ReturnType<typeof google.sheets>, sheetId: string, tab: string) {
