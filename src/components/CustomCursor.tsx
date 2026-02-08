@@ -4,9 +4,28 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function CustomCursor() {
-  if (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(pointer: coarse)").matches) {
-    return null;
+  if (typeof window !== "undefined") {
+    const mq = window.matchMedia("(pointer: fine) and (min-width: 1024px)");
+    if (!mq.matches) return null;
   }
+
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: fine) and (min-width: 1024px)");
+    const apply = () => {
+      if (mq.matches) {
+        document.body.classList.add("cursor-none");
+      } else {
+        document.body.classList.remove("cursor-none");
+      }
+    };
+    apply();
+    if (mq.addEventListener) {
+      mq.addEventListener("change", apply);
+      return () => mq.removeEventListener("change", apply);
+    }
+    mq.addListener(apply);
+    return () => mq.removeListener(apply);
+  }, []);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
 
@@ -35,10 +54,10 @@ export default function CustomCursor() {
   return (
     <>
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 pointer-events-none z-[9999] mix-blend-difference hidden md:block"
+        className="fixed top-0 left-0 w-6 h-6 pointer-events-none z-[9999] mix-blend-difference hidden md:block"
         animate={{
-          x: mousePosition.x - 16,
-          y: mousePosition.y - 16,
+          x: mousePosition.x - 12,
+          y: mousePosition.y - 12,
           scale: isHovering ? 1.5 : 1,
           rotate: isHovering ? 45 : 0
         }}
@@ -51,10 +70,10 @@ export default function CustomCursor() {
       </motion.div>
       
       <motion.div
-         className="fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9999] hidden md:block"
+         className="fixed top-0 left-0 w-[6px] h-[6px] bg-white rounded-full pointer-events-none z-[9999] hidden md:block"
          animate={{
-           x: mousePosition.x - 4,
-           y: mousePosition.y - 4,
+           x: mousePosition.x - 3,
+           y: mousePosition.y - 3,
          }}
          transition={{ type: "spring", stiffness: 500, damping: 28, mass: 0.01 }}
       />

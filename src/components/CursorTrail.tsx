@@ -4,8 +4,9 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect } from "react";
 
 export default function CursorTrail() {
-  if (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(pointer: coarse)").matches) {
-    return null;
+  if (typeof window !== "undefined") {
+    const mq = window.matchMedia("(pointer: fine) and (min-width: 1024px)");
+    if (!mq.matches) return null;
   }
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
@@ -27,7 +28,7 @@ export default function CursorTrail() {
     <>
       {/* Main Trail */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border-2 border-anime-cyan pointer-events-none z-[9998] mix-blend-difference"
+        className="fixed top-0 left-0 w-6 h-6 rounded-full border-2 border-anime-cyan pointer-events-none z-[9998] mix-blend-difference"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
@@ -38,7 +39,7 @@ export default function CursorTrail() {
       
       {/* Ghost Echo */}
       <motion.div
-        className="fixed top-0 left-0 w-16 h-16 rounded-full bg-anime-pink/20 blur-xl pointer-events-none z-[9997]"
+        className="fixed top-0 left-0 w-12 h-12 rounded-full bg-anime-pink/20 blur-xl pointer-events-none z-[9997]"
         style={{
             x: cursorX,
             y: cursorY,

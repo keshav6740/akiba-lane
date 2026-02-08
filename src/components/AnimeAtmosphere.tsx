@@ -25,7 +25,7 @@ export default function AnimeAtmosphere() {
   const [elements, setElements] = useState<Element[]>([]);
 
   useEffect(() => {
-    const count = typeof window !== "undefined" && window.innerWidth < 768 ? 6 : 15;
+    const count = typeof window !== "undefined" && window.innerWidth < 768 ? 4 : 8;
     const newElements = Array.from({ length: count }).map((_, i) => ({
       id: i,
       char: CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)],

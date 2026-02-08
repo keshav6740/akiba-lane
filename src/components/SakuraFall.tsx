@@ -11,7 +11,7 @@ export default function SakuraFall() {
   const [petals, setPetals] = useState<Petal[]>([]);
 
   useEffect(() => {
-    const count = typeof window !== "undefined" && window.innerWidth < 768 ? 10 : 30;
+    const count = typeof window !== "undefined" && window.innerWidth < 768 ? 8 : 14;
     setPetals(Array.from({ length: count }, (_, i) => ({
       id: i,
       style: {

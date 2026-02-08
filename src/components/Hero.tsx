@@ -49,13 +49,8 @@ export default function Hero() {
       <motion.div className="absolute inset-0 pointer-events-none z-10 mix-blend-overlay" style={{ background: spotlight }} />
 
       <div className="absolute inset-0 z-0">
-        <div className="sun-disc -right-20 top-[-120px] opacity-80" />
+        <div className="sun-disc -right-20 top-[-120px] opacity-70" />
         <div className="sakura-haze" />
-        <div className="manga-lines opacity-10" />
-        <div className="cyber-plane opacity-15" />
-        <div className="floating-rune left-10 top-20 text-6xl">?</div>
-        <div className="floating-rune right-24 top-40 text-5xl">?</div>
-        <div className="floating-rune left-1/2 bottom-10 text-7xl">?</div>
       </div>
 
       <div className="relative z-10 h-full max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 items-center gap-10">
@@ -101,14 +96,14 @@ export default function Hero() {
           <motion.div
             initial={{ y: -400, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 50, damping: 12, delay: 2.2 }}
+            transition={{ type: "spring", stiffness: 50, damping: 12, delay: 1.6 }}
             style={{ rotateX, rotateY }}
             className="relative w-[560px] h-[720px] bg-gray-900/60 border border-white/10 clip-card p-8 transform-style-3d shadow-[0_40px_140px_rgba(0,0,0,0.65)] paper-texture ink-vignette"
           >
             <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg z-20">
               <motion.div
                 animate={{ top: ["0%", "100%"] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                 className="absolute left-0 w-full h-[2px] bg-anime-cyan shadow-[0_0_20px_#6ee7ff]"
               />
             </div>
@@ -126,8 +121,8 @@ export default function Hero() {
 
               <div className="text-center transform translate-z-50">
                 <motion.div
-                  animate={{ scale: [1, 1.08, 1] }}
-                  transition={{ duration: 4, repeat: Infinity }}
+                  animate={{ scale: [1, 1.06, 1] }}
+                  transition={{ duration: 5, repeat: Infinity }}
                   className="w-52 h-52 mx-auto bg-gradient-to-br from-[#ffb7c5] to-[#7a4cf3] rounded-full blur-2xl opacity-60 mb-4"
                 />
                 <h3 className="font-bangers text-7xl mt-[-100px] text-white/90 drop-shadow-lg">MYSTERY BOX</h3>

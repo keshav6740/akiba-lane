@@ -17,7 +17,7 @@ export default function WishlistPage() {
     }, [wishlist]);
 
     return (
-        <main className="min-h-screen cursor-none">
+        <main className="min-h-screen">
             <CustomCursor />
             <CursorTrail />
             <CyberHUD />

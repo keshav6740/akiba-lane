@@ -119,22 +119,9 @@ function ProductCard({ product, tiltEnabled }: { product: Product; tiltEnabled: 
 export default function ProductGrid({ productsToShow }: ProductGridProps) {
   const { currentCategory, setCategory } = useStore();
   const [sortOrder, setSortOrder] = useState("default");
-  const [tiltEnabled, setTiltEnabled] = useState(true);
+  const [tiltEnabled] = useState(false);
   const [pageSize, setPageSize] = useState(12);
   const [visibleCount, setVisibleCount] = useState(12);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(pointer: fine) and (min-width: 768px)");
-    const update = () => setTiltEnabled(mq.matches);
-    update();
-    if (mq.addEventListener) {
-      mq.addEventListener("change", update);
-      return () => mq.removeEventListener("change", update);
-    }
-    mq.addListener(update);
-    return () => mq.removeListener(update);
-  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

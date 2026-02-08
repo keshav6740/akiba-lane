@@ -11,7 +11,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 
 export default function Home() {
   return (
-    <main className="min-h-screen cursor-none snap-container">
+    <main className="min-h-screen snap-container">
       <CustomCursor />
       <CursorTrail />
       <CyberHUD />
