@@ -51,7 +51,7 @@ async function getAuth() {
           credentials: parsed,
           scopes: ["https://www.googleapis.com/auth/spreadsheets"],
         });
-        return await auth.getClient();
+        return auth;
       }
       clientEmail = parsed.client_email || clientEmail;
       privateKey = parsed.private_key || privateKey;
@@ -73,7 +73,7 @@ async function getAuth() {
     credentials: { client_email: clientEmail, private_key: privateKey },
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
-  return await auth.getClient();
+  return auth;
 }
 
 async function getSheetTabId(sheets: ReturnType<typeof google.sheets>, sheetId: string, tab: string) {
