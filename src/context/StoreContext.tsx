@@ -12,6 +12,7 @@ interface StoreContextType {
   isCartOpen: boolean;
   addToCart: (product: Product) => void;
   removeFromCart: (productId: string) => void;
+  updateCartQuantity: (productId: string, quantity: number) => void;
   toggleWishlist: (productId: string) => void;
   setCategory: (category: string) => void;
   toggleCart: () => void;
@@ -27,16 +28,49 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
 
+  // Load wishlist from localStorage
   useEffect(() => {
-    const storedWishlist = localStorage.getItem("wishlist");
-    if (storedWishlist) {
-      setWishlist(JSON.parse(storedWishlist));
+    try {
+      const storedWishlist = localStorage.getItem("wishlist");
+      if (storedWishlist) {
+        const parsed = JSON.parse(storedWishlist);
+        if (Array.isArray(parsed)) setWishlist(parsed);
+      }
+    } catch {
+      // Corrupted data — ignore
     }
   }, []);
 
+  // Save wishlist to localStorage
   useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    try {
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    } catch {
+      // Storage full or unavailable
+    }
   }, [wishlist]);
+
+  // Load cart from localStorage
+  useEffect(() => {
+    try {
+      const storedCart = localStorage.getItem("cart");
+      if (storedCart) {
+        const parsed = JSON.parse(storedCart);
+        if (Array.isArray(parsed)) setCart(parsed);
+      }
+    } catch {
+      // Corrupted data — ignore
+    }
+  }, []);
+
+  // Save cart to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    } catch {
+      // Storage full or unavailable
+    }
+  }, [cart]);
 
   const showNotification = (msg: string) => {
     setNotification(msg);
@@ -60,6 +94,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setCart((prev) => prev.filter((item) => item.id !== productId));
   };
 
+  const updateCartQuantity = (productId: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === productId ? { ...item, quantity } : item
+      )
+    );
+  };
+
   const toggleWishlist = (productId: string) => {
     setWishlist((prev) => {
       if (prev.includes(productId)) {
@@ -81,7 +127,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const toggleCart = () => setIsCartOpen(!isCartOpen);
+  const toggleCart = () => setIsCartOpen((prev) => !prev);
 
   return (
     <StoreContext.Provider
@@ -92,6 +138,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         isCartOpen,
         addToCart,
         removeFromCart,
+        updateCartQuantity,
         toggleWishlist,
         setCategory,
         toggleCart,

@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import { Orbitron, Bangers, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "@/context/StoreContext";
-import SakuraFall from "@/components/SakuraFall";
 import AnimeToast from "@/components/AnimeToast";
 import CartDrawer from "@/components/CartDrawer";
 import KatanaPreloader from "@/components/KatanaPreloader";
-import AnimeAtmosphere from "@/components/AnimeAtmosphere";
+import Script from "next/script";
 
 const orbitron = Orbitron({
   variable: "--font-orbitron",
@@ -35,6 +34,8 @@ export const metadata: Metadata = {
   description: "The ultimate destination for high-quality anime action figures, mystery boxes, and exclusive accessories.",
 };
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,14 +43,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${bangers.variable} antialiased bg-black text-white overflow-x-hidden`}
       >
         <StoreProvider>
-          <div className="noise-overlay fixed inset-0 z-[9999] pointer-events-none opacity-5 mix-blend-overlay"></div>
           <KatanaPreloader />
-          <SakuraFall />
-          <AnimeAtmosphere />
           <AnimeToast />
           <CartDrawer />
           {children}

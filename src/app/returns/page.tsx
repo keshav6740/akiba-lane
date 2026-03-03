@@ -1,11 +1,15 @@
 "use client";
 
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
 export default function ReturnsPage() {
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-16 cursor-auto relative overflow-hidden">
+    <main className="min-h-screen bg-black text-white cursor-auto relative overflow-hidden">
       <div className="parallax-bg" />
-      <div className="max-w-3xl mx-auto relative z-10">
-        <h1 className="text-4xl md:text-6xl font-bangers mb-6 text-center uppercase">Returns & Exchanges</h1>
+      <Navbar />
+      <div className="max-w-3xl mx-auto relative z-10 px-6 pt-28 pb-16">
+        <h1 className="text-4xl md:text-6xl font-bangers mb-6 text-center uppercase">Returns &amp; Exchanges</h1>
         <div className="space-y-6 text-gray-300 text-sm md:text-base font-mono">
           <p>
             We carefully pack every order to ensure items arrive safely. If your item arrives damaged,
@@ -24,6 +28,7 @@ export default function ReturnsPage() {
           </p>
         </div>
       </div>
+      <Footer />
     </main>
   );
 }

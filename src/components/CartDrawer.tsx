@@ -6,7 +6,7 @@ import { X, Trash2, ShoppingBag, MessageCircle } from "lucide-react";
 import { useState } from "react";
 
 export default function CartDrawer() {
-  const { cart, isCartOpen, toggleCart, removeFromCart } = useStore();
+  const { cart, isCartOpen, toggleCart, removeFromCart, updateCartQuantity } = useStore();
   const [checkoutMode, setCheckoutMode] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -18,14 +18,12 @@ export default function CartDrawer() {
     pincode: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitError(null);
 
     const itemsList = cart
       .map(item => `- ${item.name} x${item.quantity} (${item.currency}${item.price})`)
@@ -39,6 +37,31 @@ export default function CartDrawer() {
     ]
       .filter(Boolean)
       .join(", ");
+
+    // Build WhatsApp message
+    const message = `
+*NEW ORDER REQUEST*
+------------------
+*Customer:* ${formData.name}
+*Phone:* ${formData.phone}
+*Address:* ${address}
+------------------
+*ITEMS:*
+${itemsList}
+------------------
+*TOTAL ESTIMATE:* Rs. ${total}
+------------------
+Please confirm availability and payment details.
+Also provide me with theme stickers.
+    `.trim();
+
+    const phone = "919426340289";
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+    // Always open WhatsApp first — this is the real order mechanism
+    window.open(url, "_blank");
+
+    // Try to save to DB in background (non-blocking)
     const orderPayload = {
       name: formData.name,
       phone: formData.phone,
@@ -57,51 +80,28 @@ export default function CartDrawer() {
       source: "whatsapp",
     };
 
-    let orderId: string | null = null;
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderPayload),
+        keepalive: true,
       });
-      const json = await res.json();
-      if (!res.ok) {
-        setSubmitError("Order save failed. Please try again or contact support.");
-      } else {
-        orderId = json.id || null;
-        // Fire and forget sheet sync to keep checkout fast
+      if (res.ok) {
+        const json = await res.json();
+        // Fire and forget sheet sync
         fetch("/api/orders/sync-sheet", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ order: json.order }),
           keepalive: true,
-        }).catch(() => {});
+        }).catch(() => { });
       }
     } catch {
-      setSubmitError("Order save failed. Please try again or contact support.");
+      // DB save failed silently — order went through via WhatsApp
     } finally {
       setIsSubmitting(false);
     }
-
-    const message = `
-*NEW ORDER REQUEST*
-------------------
-*Customer:* ${formData.name}
-*Phone:* ${formData.phone}
-*Address:* ${address}
-------------------
-*ITEMS:*
-${itemsList}
-------------------
-*TOTAL ESTIMATE:* Rs. ${total}
-------------------
-Please confirm availability and payment details.
-Also provide me with theme stickers.
-    `.trim();
-
-    const phone = "9426340289";
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
   };
 
   return (
@@ -123,11 +123,11 @@ Also provide me with theme stickers.
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed top-0 right-0 h-full w-full max-w-md bg-black border-l border-anime-pink z-[70] shadow-[0_0_50px_rgba(255,0,85,0.2)] overflow-y-auto"
+            className="fixed top-0 right-0 h-full w-full sm:max-w-md bg-black border-l border-anime-pink z-[70] shadow-[0_0_50px_rgba(255,0,85,0.2)] overflow-y-auto"
           >
-            <div className="p-6 h-full flex flex-col">
-              <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
-                <h2 className="text-3xl font-bangers text-white tracking-wide">
+            <div className="p-4 md:p-6 h-full flex flex-col">
+              <div className="flex justify-between items-center mb-6 md:mb-8 border-b border-white/10 pb-4">
+                <h2 className="text-2xl md:text-3xl font-bangers text-white tracking-wide">
                   YOUR <span className="text-anime-pink">LOOT</span>
                 </h2>
                 <button onClick={toggleCart} className="hover:text-anime-pink transition-colors">
@@ -146,14 +146,29 @@ Also provide me with theme stickers.
                     ) : (
                       cart.map((item) => (
                         <div key={item.id} className="flex gap-4 bg-gray-900/50 p-3 rounded border border-white/5 relative group">
-                          <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded border border-white/10" />
+                          <img src={item.image} alt={item.name} className="w-16 h-16 md:w-20 md:h-20 object-cover rounded border border-white/10" />
                           <div className="flex-1">
                             <h4 className="font-bold text-white text-sm line-clamp-1">{item.name}</h4>
                             <p className="text-anime-pink font-mono text-xs mt-1">
-                              {item.currency}{item.price} x {item.quantity}
+                              {item.currency}{item.price}
                             </p>
+                            <div className="flex items-center gap-2 mt-2">
+                              <button
+                                onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
+                                className="w-6 h-6 border border-white/20 text-white text-xs flex items-center justify-center hover:bg-white/10 transition-colors"
+                              >
+                                −
+                              </button>
+                              <span className="text-white font-mono text-xs w-6 text-center">{item.quantity}</span>
+                              <button
+                                onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
+                                className="w-6 h-6 border border-white/20 text-white text-xs flex items-center justify-center hover:bg-white/10 transition-colors"
+                              >
+                                +
+                              </button>
+                            </div>
                           </div>
-                          <button 
+                          <button
                             onClick={() => removeFromCart(item.id)}
                             className="absolute top-2 right-2 text-gray-500 hover:text-red-500 transition-colors"
                           >
@@ -165,14 +180,14 @@ Also provide me with theme stickers.
                   </div>
 
                   <div className="mt-8 border-t border-white/10 pt-6">
-                    <div className="flex justify-between text-xl font-bold mb-6 font-mono">
+                    <div className="flex justify-between text-lg md:text-xl font-bold mb-4 md:mb-6 font-mono">
                       <span>TOTAL</span>
                       <span className="text-anime-cyan">Rs. {total}</span>
                     </div>
-                    <button 
+                    <button
                       onClick={() => setCheckoutMode(true)}
                       disabled={cart.length === 0}
-                      className="w-full bg-anime-pink text-white font-black py-4 skew-x-[-5deg] hover:bg-white hover:text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full bg-anime-pink text-white font-black py-3 md:py-4 hover:bg-white hover:text-black transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
                     >
                       PROCEED TO CHECKOUT
                     </button>
@@ -183,34 +198,34 @@ Also provide me with theme stickers.
                   <button onClick={() => setCheckoutMode(false)} className="text-gray-500 mb-6 hover:text-white text-sm">
                     {"\u2190 Back to Cart"}
                   </button>
-                  
+
                   <h3 className="text-xl font-bold mb-6 font-bangers text-anime-cyan">TRANSMISSION DETAILS</h3>
-                  
+
                   <form onSubmit={handleCheckout} className="space-y-4 font-mono text-sm">
                     <div>
                       <label className="block text-gray-400 mb-2">CODENAME (Name)</label>
-                      <input 
+                      <input
                         required
-                        type="text" 
+                        type="text"
                         className="w-full bg-gray-900 border border-white/20 p-3 focus:border-anime-pink outline-none text-white"
                         placeholder="Enter your name"
                         value={formData.name}
-                        onChange={e => setFormData({...formData, name: e.target.value})}
+                        onChange={e => setFormData({ ...formData, name: e.target.value })}
                       />
                     </div>
 
                     <div>
                       <label className="block text-gray-400 mb-2">CONTACT (Phone)</label>
-                      <input 
+                      <input
                         required
-                        type="tel" 
+                        type="tel"
                         className="w-full bg-gray-900 border border-white/20 p-3 focus:border-anime-pink outline-none text-white"
                         placeholder="Enter phone number"
                         value={formData.phone}
-                        onChange={e => setFormData({...formData, phone: e.target.value})}
+                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-gray-400 mb-2">STREET ADDRESS (LINE 1)</label>
                       <input
@@ -308,13 +323,11 @@ Also provide me with theme stickers.
                       />
                     </div>
 
-                  {submitError && (
-                    <p className="text-red-400 text-xs">{submitError}</p>
-                  )}
-                  <button
+
+                    <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-green-600 text-white font-black py-4 mt-8 hover:bg-green-500 transition-colors uppercase flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full bg-green-600 text-white font-black py-3 md:py-4 mt-6 md:mt-8 hover:bg-green-500 transition-colors uppercase flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed text-sm md:text-base"
                     >
                       <MessageCircle className="w-5 h-5" /> SEND VIA WHATSAPP
                     </button>

@@ -16,21 +16,23 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-black/40 py-20 px-6 border-t border-white/5 relative z-10 torii-frame edge-tear">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-        <div className="col-span-1 md:col-span-2">
+    <footer className="bg-black/40 py-12 md:py-20 px-4 md:px-6 border-t border-white/5 relative z-10 torii-frame edge-tear">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+        <div className="col-span-1 sm:col-span-2">
           <div className="flex items-center gap-2 mb-6">
             <Ghost className="text-anime-pink w-8 h-8" />
             <span className="text-2xl font-black italic tracking-tighter">
               AKIBA<span className="text-anime-pink">LANE</span>
             </span>
           </div>
-          <p className="text-gray-300 max-w-sm mb-8">
+          <p className="text-gray-300 max-w-sm mb-6 md:mb-8 text-sm md:text-base">
             The premier destination for anime collectors. Founded by fans, for fans. Join our community and level up your shelf today.
           </p>
           <div className="flex gap-4">
             <a
               href="https://www.instagram.com/akibalane.official?igsh=eTUwMDBxb2FrZzFk"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-10 h-10 flex items-center justify-center border border-white/10 rounded-full hover:border-anime-pink transition-colors"
             >
               <Instagram className="w-5 h-5" />
@@ -43,6 +45,7 @@ export default function Footer() {
           <ul className="space-y-4 text-gray-300 font-medium">
             <li><Link href="/shipping-policy" className="hover:text-anime-pink transition-colors">Shipping Policy</Link></li>
             <li><Link href="/returns" className="hover:text-anime-pink transition-colors">Returns</Link></li>
+            <li><Link href="/faq" className="hover:text-anime-pink transition-colors">FAQ</Link></li>
           </ul>
         </div>
 
@@ -64,17 +67,18 @@ export default function Footer() {
               JOIN
             </button>
             {status === "ok" && (
-              <p className="text-xs text-anime-cyan font-mono">Thanks. Youre on the list.</p>
+              <p className="text-xs text-anime-cyan font-mono">Thanks. You&apos;re on the list.</p>
             )}
           </form>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="text-gray-600 text-sm">© 2026 AKIBA LANE. Built with passion for the culture.</p>
-        <div className="flex gap-6 text-gray-600 text-sm">
+      <div className="max-w-7xl mx-auto mt-12 md:mt-20 pt-6 md:pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-center">
+        <p className="text-gray-600 text-xs md:text-sm">© 2026 AKIBA LANE. Built with passion for the culture.</p>
+        <div className="flex gap-6 text-gray-600 text-xs md:text-sm">
           <Link href="/shipping-policy" className="hover:text-white">Shipping</Link>
           <Link href="/returns" className="hover:text-white">Returns</Link>
+          <Link href="/faq" className="hover:text-white">FAQ</Link>
         </div>
       </div>
     </footer>

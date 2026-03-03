@@ -4,15 +4,16 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function CustomCursor() {
-  if (typeof window !== "undefined") {
-    const mq = window.matchMedia("(pointer: fine) and (min-width: 1024px)");
-    if (!mq.matches) return null;
-  }
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(pointer: fine) and (min-width: 1024px)");
     const apply = () => {
-      if (mq.matches) {
+      const matches = mq.matches;
+      setIsDesktop(matches);
+      if (matches) {
         document.body.classList.add("cursor-none");
       } else {
         document.body.classList.remove("cursor-none");
@@ -26,10 +27,10 @@ export default function CustomCursor() {
     mq.addListener(apply);
     return () => mq.removeListener(apply);
   }, []);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
+    if (!isDesktop) return;
+
     const updateMousePosition = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -49,7 +50,9 @@ export default function CustomCursor() {
       window.removeEventListener("mousemove", updateMousePosition);
       window.removeEventListener("mouseover", handleMouseOver);
     };
-  }, []);
+  }, [isDesktop]);
+
+  if (!isDesktop) return null;
 
   return (
     <>

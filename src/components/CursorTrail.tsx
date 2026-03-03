@@ -1,13 +1,10 @@
 "use client";
 
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function CursorTrail() {
-  if (typeof window !== "undefined") {
-    const mq = window.matchMedia("(pointer: fine) and (min-width: 1024px)");
-    if (!mq.matches) return null;
-  }
+  const [isDesktop, setIsDesktop] = useState(false);
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
@@ -16,13 +13,28 @@ export default function CursorTrail() {
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
+    const mq = window.matchMedia("(pointer: fine) and (min-width: 1024px)");
+    const apply = () => setIsDesktop(mq.matches);
+    apply();
+    if (mq.addEventListener) {
+      mq.addEventListener("change", apply);
+      return () => mq.removeEventListener("change", apply);
+    }
+    mq.addListener(apply);
+    return () => mq.removeListener(apply);
+  }, []);
+
+  useEffect(() => {
+    if (!isDesktop) return;
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
     };
     window.addEventListener("mousemove", moveCursor);
     return () => window.removeEventListener("mousemove", moveCursor);
-  }, [cursorX, cursorY]);
+  }, [isDesktop, cursorX, cursorY]);
+
+  if (!isDesktop) return null;
 
   return (
     <>
@@ -36,15 +48,15 @@ export default function CursorTrail() {
           translateY: "-50%",
         }}
       />
-      
+
       {/* Ghost Echo */}
       <motion.div
         className="fixed top-0 left-0 w-12 h-12 rounded-full bg-anime-pink/20 blur-xl pointer-events-none z-[9997]"
         style={{
-            x: cursorX,
-            y: cursorY,
-            translateX: "-50%",
-            translateY: "-50%",
+          x: cursorX,
+          y: cursorY,
+          translateX: "-50%",
+          translateY: "-50%",
         }}
         transition={{ delay: 0.1 }}
       />

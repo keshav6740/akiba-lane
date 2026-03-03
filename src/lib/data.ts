@@ -1,9 +1,10 @@
-import { Sparkles, Box, Wand2, Layers, ShoppingBag } from "lucide-react";
+import { Sparkles, Box, Wand2, Layers } from "lucide-react";
+import { ComponentType } from "react";
 
 export type Category = {
   id: string;
   title: string;
-  icon: any;
+  icon: ComponentType<{ className?: string }>;
   color: string;
   bg: string;
   desc: string;

@@ -38,19 +38,13 @@ body {
 .cursor-none { cursor: none; }
 .cursor-auto { cursor: auto !important; }
 
-/* Noise Overlay */
-.noise-overlay {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-/* Background Helpers */
+/* Background */
 .parallax-bg {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(1200px 600px at 10% 0%, rgba(255, 183, 197, 0.18), transparent 60%),
-    radial-gradient(800px 400px at 90% 10%, rgba(122, 76, 243, 0.18), transparent 60%),
-    radial-gradient(900px 700px at 50% 100%, rgba(242, 154, 125, 0.18), transparent 60%),
+    radial-gradient(1200px 600px at 10% 0%, rgba(255, 183, 197, 0.12), transparent 60%),
+    radial-gradient(800px 400px at 90% 10%, rgba(122, 76, 243, 0.12), transparent 60%),
     linear-gradient(180deg, #09070a 0%, #070607 60%, #0b090b 100%);
   z-index: 0;
   pointer-events: none;
@@ -61,31 +55,19 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image:
-    radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-    linear-gradient(120deg, rgba(255,255,255,0.04), transparent 40%);
-  background-size: 3px 3px, 100% 100%;
+  background-image: linear-gradient(120deg, rgba(255,255,255,0.04), transparent 40%);
+  background-size: 100% 100%;
   mix-blend-mode: overlay;
-  opacity: 0.4;
+  opacity: 0.3;
   pointer-events: none;
-}
-
-.ink-vignette::before {
-  content: "";
-  position: absolute;
-  inset: -10%;
-  background: radial-gradient(60% 60% at 50% 50%, transparent 40%, rgba(0,0,0,0.65) 100%);
-  pointer-events: none;
-  opacity: 0.35;
 }
 
 .sakura-haze {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 20% 30%, rgba(255,183,197,0.25), transparent 45%),
-              radial-gradient(circle at 80% 40%, rgba(110,231,255,0.18), transparent 45%);
-  filter: blur(10px);
-  opacity: 0.6;
+  background: radial-gradient(circle at 20% 30%, rgba(255,183,197,0.15), transparent 45%),
+              radial-gradient(circle at 80% 40%, rgba(110,231,255,0.1), transparent 45%);
+  opacity: 0.5;
 }
 
 .sun-disc {
@@ -94,32 +76,14 @@ body {
   height: 520px;
   border-radius: 999px;
   background: radial-gradient(circle at 30% 30%, #fff1e8, #f7b38b 40%, rgba(242,154,125,0.2) 70%);
-  filter: blur(2px);
-  box-shadow: 0 0 120px rgba(242,154,125,0.35);
+  box-shadow: 0 0 80px rgba(242,154,125,0.2);
 }
 
-.floating-rune {
-  position: absolute;
-  font-family: "Noto Sans JP", sans-serif;
-  color: rgba(255,255,255,0.12);
-  mix-blend-mode: overlay;
-  animation: float-rune 12s ease-in-out infinite;
-}
-
-@keyframes float-rune {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-18px) rotate(3deg); }
-}
-
-.edge-tear {
-  position: relative;
-}
+.edge-tear { position: relative; }
 .edge-tear::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
+  left: 0; right: 0; bottom: -1px;
   height: 20px;
   background: linear-gradient(135deg, transparent 75%, rgba(255,255,255,0.05) 75%),
               linear-gradient(225deg, transparent 75%, rgba(255,255,255,0.05) 75%);
@@ -131,61 +95,30 @@ body {
 .torii-frame::after {
   content: "";
   position: absolute;
-  left: 6%;
-  right: 6%;
+  left: 6%; right: 6%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,183,197,0.6), transparent);
-  box-shadow: 0 0 30px rgba(255,183,197,0.2);
+  background: linear-gradient(90deg, transparent, rgba(255,183,197,0.5), transparent);
 }
 .torii-frame::before { top: 0; }
 .torii-frame::after { bottom: 0; }
 
 .sakura-divider {
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,183,197,0.8), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,183,197,0.7), transparent);
 }
 
-/* LIQUID METAL TEXT */
+/* LIQUID METAL TEXT — simplified, no infinite animation */
 .liquid-metal {
   background-image: linear-gradient(
     -75deg,
-    transparent 0,
-    transparent 5%,
-    rgba(255, 255, 255, 0.5) 5%,
-    rgba(255, 255, 255, 0.5) 10%,
-    transparent 10%,
-    transparent 100%
+    transparent 0, transparent 5%,
+    rgba(255, 255, 255, 0.4) 5%, rgba(255, 255, 255, 0.4) 10%,
+    transparent 10%, transparent 100%
   );
   background-size: 200% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: shine 3s infinite linear;
-}
-
-.chrome-text {
-  background: linear-gradient(
-    to bottom,
-    #ffffff 0%,
-    #e0e0e0 40%,
-    #a0a0a0 50%,
-    #404040 51%,
-    #808080 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0px 2px 0px rgba(0,0,0,0.5);
-  position: relative;
-}
-
-.chrome-text::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  top: 0;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 40%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  z-index: 2;
+  animation: shine 4s ease-in-out 1 forwards;
 }
 
 @keyframes shine {
@@ -193,130 +126,48 @@ body {
   100% { background-position: -200% 0; }
 }
 
-/* 3D CYBER FLOOR */
-.cyber-plane {
-  width: 200%;
-  height: 100%;
-  position: absolute;
-  bottom: -50%;
-  left: -50%;
-  background-image: 
-    linear-gradient(rgba(0, 255, 255, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 255, 0.3) 1px, transparent 1px);
-  background-size: 100px 100px;
-  transform: perspective(500px) rotateX(60deg);
-  animation: plane-move 5s linear infinite;
-  mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, transparent 100%);
-  z-index: -1;
-}
-
-@keyframes plane-move {
-  0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
-  100% { transform: perspective(500px) rotateX(60deg) translateY(100px); }
-}
-
-/* Glitch Text & Other Utils */
+/* Glitch Text — simplified, only on hover */
 .glitch-text { position: relative; }
-.glitch-text::before, .glitch-text::after {
-  content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-}
-.glitch-text::before {
-  left: 2px; text-shadow: -1px 0 var(--anime-pink); clip: rect(24px, 550px, 90px, 0);
-  animation: glitch-anim-2 3s infinite linear alternate-reverse;
-}
-.glitch-text::after {
-  left: -2px; text-shadow: -1px 0 var(--anime-cyan); clip: rect(85px, 550px, 140px, 0);
-  animation: glitch-anim 2.5s infinite linear alternate-reverse;
-}
 
-@keyframes glitch-anim {
-  0% { clip: rect(10px, 9999px, 30px, 0); }
-  20% { clip: rect(80px, 9999px, 100px, 0); }
-  40% { clip: rect(10px, 9999px, 100px, 0); }
-  60% { clip: rect(40px, 9999px, 60px, 0); }
-  80% { clip: rect(20px, 9999px, 90px, 0); }
-  100% { clip: rect(60px, 9999px, 80px, 0); }
-}
-@keyframes glitch-anim-2 {
-  0% { clip: rect(60px, 9999px, 90px, 0); }
-  20% { clip: rect(10px, 9999px, 40px, 0); }
-  40% { clip: rect(50px, 9999px, 80px, 0); }
-  60% { clip: rect(30px, 9999px, 50px, 0); }
-  80% { clip: rect(90px, 9999px, 100px, 0); }
-  100% { clip: rect(20px, 9999px, 60px, 0); }
-}
-
-/* HOLOGRAPHIC SHIMMER */
+/* Holographic shimmer — only on hover, no infinite loop */
 .holo-effect { position: relative; overflow: hidden; }
 .holo-effect::after {
   content: ""; position: absolute; top: 0; left: -100%; width: 200%; height: 100%;
-  background: linear-gradient(115deg, transparent 20%, rgba(255, 0, 85, 0.4) 40%, rgba(0, 255, 255, 0.4) 60%, transparent 80%);
+  background: linear-gradient(115deg, transparent 20%, rgba(255, 0, 85, 0.3) 40%, rgba(0, 255, 255, 0.3) 60%, transparent 80%);
   opacity: 0; transition: opacity 0.3s; pointer-events: none; mix-blend-mode: color-dodge; transform: skewX(-20deg);
 }
-.group:hover .holo-effect::after { opacity: 1; animation: holo-slide 1.5s infinite linear; }
-@keyframes holo-slide {
-  0% { transform: translateX(-100%) skewX(-20deg); }
-  100% { transform: translateX(50%) skewX(-20deg); }
-}
+.group:hover .holo-effect::after { opacity: 1; }
 
+/* Clip Paths */
 .clip-button { clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%); }
 .clip-card { clip-path: polygon(0 0, 90% 0, 100% 10%, 100% 100%, 10% 100%, 0 90%); }
 .text-stroke-white { -webkit-text-stroke: 1px rgba(255,255,255,0.1); }
 .text-stroke-black { -webkit-text-stroke: 2px black; }
 
-/* Repeating Stripe Utility */
-.bg-repeating-linear-gradient-45 {
-  background-image: repeating-linear-gradient(
-    45deg,
-    transparent 0 10px,
-    rgba(0, 255, 255, 0.2) 10px 20px
-  );
-}
-
 /* Utility Layout/Transform */
 .perspective-1000 { perspective: 1000px; }
 .transform-style-3d { transform-style: preserve-3d; }
-.writing-vertical-rl { writing-mode: vertical-rl; }
-
-/* Scroll Snap */
-.snap-container {
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-}
-.snap-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
 
 /* Mobile Optimization */
 @media (max-width: 768px) {
   body { cursor: auto; }
-  .snap-container { scroll-snap-type: none; }
-  .cyber-plane { opacity: 0.06; }
-  .manga-lines { opacity: 0.04; }
-  .noise-overlay { opacity: 0.03; }
   .sun-disc { display: none; }
-  .floating-rune { display: none; }
   .parallax-bg {
     background:
-      radial-gradient(600px 300px at 10% 0%, rgba(255, 183, 197, 0.14), transparent 60%),
-      radial-gradient(600px 300px at 90% 10%, rgba(122, 76, 243, 0.12), transparent 60%),
+      radial-gradient(400px 200px at 10% 0%, rgba(255, 183, 197, 0.1), transparent 60%),
       linear-gradient(180deg, #09070a 0%, #070607 60%, #0b090b 100%);
   }
+  .paper-texture::after { display: none; }
+  .torii-frame::before,
+  .torii-frame::after { display: none; }
+  .holo-effect::after { display: none; }
 }
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
-  .manga-lines, .cyber-plane, .liquid-metal { animation: none !important; }
-}
-
-/* Simple Glitch Hover */
-.animate-glitch { animation: glitch-shake 0.4s steps(2, end) infinite; }
-@keyframes glitch-shake {
-  0% { transform: translate(0); }
-  25% { transform: translate(-1px, 1px); }
-  50% { transform: translate(1px, -1px); }
-  75% { transform: translate(-1px, -1px); }
-  100% { transform: translate(0); }
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
